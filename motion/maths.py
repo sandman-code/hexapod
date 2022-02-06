@@ -288,3 +288,9 @@ Output: Skewed vector
 '''
 def skew(v):
     return np.array([[0, -v.z, v.y], [v.z, 0, -v.x], [-v.y, v.x, 0]])
+
+def x_pos_wrt_body():
+    return 0
+    
+def trajectory_planning():
+    return 0
