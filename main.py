@@ -7,9 +7,10 @@ if __name__ == '__main__':
     torque = JT @ np.array([0,0,10])
     alpha = 240
     beta = 5
-    gamma = 5
+    gamma = 95 
 
     
+<<<<<<< HEAD
     LX16A.initialize("/dev/tty.usbserial-14340")
     try:
         servo_1 = LX16A(16)
@@ -30,18 +31,11 @@ if __name__ == '__main__':
     servo_1.moveTimeWrite(65, 1000)
     servo_2.moveTimeWrite(65, 1000)
     servo_3.moveTimeWrite(180, 1000)
-
     '''
 
     
-    print("EE Position: " + "\n" )
-    print(np.around(calc_fk([0,0,np.pi/2])))
 
 
 
 
 
-# 5 deg offset 
-# 500 == zero
-# 100 == 90
-# 850 
