@@ -289,8 +289,19 @@ Output: Skewed vector
 def skew(v):
     return np.array([[0, -v.z, v.y], [v.z, 0, -v.x], [-v.y, v.x, 0]])
 
-def x_pos_wrt_body():
+def pos_vector():
     return 0
     
-def trajectory_planning():
-    return 0
+def trajectory_planning(q_0, q_f, v_0, v_f, t_0, t_f):
+    m = np.matrix(
+            [1, t_0, t_0**2, t_0**3],
+            [0, 1, 2*t_0, 3*(t_0**2)],
+            [1, t_f, t_f**2, t_f**3],
+            [0, 1, 2*t_f, 3*(t_f**2)])
+    given = np.array(q_0, v_0, q_f, v_f)
+    return np.matmul(given, np.linalg.inv(m))  
+
+def cubic_traj(a, t):
+    return a(0) + a(1)*t + a(2)*(t**2) + a(3)*(t**3)
+
+
