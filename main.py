@@ -5,16 +5,14 @@ from comm.lx16a import *
 if __name__ == '__main__':
     JT = calc_jacobian(0, 0, (np.pi / 2))
     torque = JT @ np.array([0,0,10])
-    alpha = 95
+    alpha = 240
     beta = 5
     gamma = 5
 
     
-    LX16A.initialize("COM3")
+    LX16A.initialize("/dev/tty.usbserial-14340")
     try:
-        servo_1 = LX16A(1)
-        servo_2 = LX16A(2)
-        servo_3 = LX16A(3)
+        servo_1 = LX16A(16)
     
     except ServoTimeout as e:
         print(f"Servo {e.ID} is not responding. Exiting...")
@@ -23,8 +21,6 @@ if __name__ == '__main__':
     print("\n")
     print("Packets: " + "\n")
     servo_1.moveTimeWrite(alpha, 1000)
-    servo_2.moveTimeWrite(beta, 1000)
-    servo_3.moveTimeWrite(gamma, 1000)
     print("\n")
     
 
