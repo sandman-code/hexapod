@@ -205,7 +205,7 @@ class LX16A:
 		
 		packet = [0x55, 0x55, self.ID, 4, 17, offset]
 		LX16A.sendPacket(packet)
-	
+
 	# Permanently applies the offset angle set by
 	# servo.AngleOffsetAdjust. After the servo powers
 	# down, the offset will default to the set angle
@@ -447,10 +447,13 @@ class LX16A:
 			servos[i].moveTimeWaitWrite(servos[i].angle + data[i][0], data[i][1])
 		
 		LX16A.moveStartAll()
+
+	def moveFromCenter(self, angle, time):
+		self.moveTimeWrite(angle + 120, time)
+
+    ################# Read Commands #################
 	
-	################# Read Commands #################
-	
-	# Returns the parameters of the most recent
+    # Returns the parameters of the most recent
 	# servo.moveTimeWrite command
 	
 	# Parameter order:

@@ -110,6 +110,22 @@ def calc_fk(angles):
 
     return T01 @ T12 @ T23 @ T34
 
+# orr[alpha, beta, gamma]
+def calc_ik(orr, legs):
+    R = rotz(orr[0]) @ roty(orr[1]) @ rotx(orr[2])
+    
+    
+    return 0
+
+
+# O: position vector of COR wrt ground
+# R: desired orientation matrix of the robot body
+# s_i: hip joint vector wrt body
+# u_i: foot point vector wrt to ground
+
+def calc_hip_vector(O, R, s_i, u_i):
+    return O + (R @ s_i) - u_i
+
 '''
 Input: Angle (deg)
 
@@ -303,5 +319,4 @@ def trajectory_planning(q_0, q_f, v_0, v_f, t_0, t_f):
 
 def cubic_traj(a, t):
     return a(0) + a(1)*t + a(2)*(t**2) + a(3)*(t**3)
-
 
