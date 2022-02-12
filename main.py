@@ -56,7 +56,8 @@ if __name__ == '__main__':
                 servo_14,
                 servo_15,
                 servo_16,
-                servo_17)
+                servo_17,
+                servo_18)
         
     except ServoTimeout as e:
         print(f"Servo {e.ID} is not responding. Exiting...")

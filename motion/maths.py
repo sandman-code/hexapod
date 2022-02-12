@@ -5,6 +5,15 @@ L1 = 29.49
 L2 = 50.12
 L3 = 63.94
 
+#beta = 0.75 - wave gait
+
+'''
+u(t)_f/b = beta(t)/(1-beta(t) * v(t)
+u(t)_f/g = v(t) / 1-beta(t)
+
+x_f/g(t + del_t) = x_f/g(t) + xdot_f/g * del_t
+z_f/g(t + del_t) = z_f/g(t) + zdot_f/g * del_t
+'''
 
 
 class Vector:
@@ -29,7 +38,24 @@ class Vector:
     
     def transposed(self):
         return np.transpose(self.vec_arr())
+
+    def get_x_wrld(self):
+        return 0
+
+    def get_y_wrld(self):
+        return 0
     
+    def get_z_wrld(self):
+        return 0
+
+    def get_x_plat(self):
+        return 0
+
+    def get_y_plat(self):
+        return 0
+
+    def get_z_plat(self):
+        return 0
 
 
 def calc_jacobian(theta1, theta2, theta3):
@@ -111,21 +137,73 @@ def calc_fk(angles):
     return T01 @ T12 @ T23 @ T34
 
 # orr[alpha, beta, gamma]
-def calc_ik(orr, legs):
-    R = rotz(orr[0]) @ roty(orr[1]) @ rotx(orr[2])
-    
-    
-    return 0
+def calc_ik_parallel(orr, hexapod):
 
+    O = hexapod.origin_vector
+    R = rotz(orr[0]) @ roty(orr[1]) @ rotx(orr[2])
+    s1 = hexapod.hip_vector
+    u = hexapod.leg_pos
+
+    i = 0
+    j = 0
+
+    
+    legs = hexapod.legs
+
+    for l in legs:
+        l.hip_vector = calc_leg_vector(O, R, s1[i], u[1])
+        i += 1
+
+    for l in legs:
+        l.alpha = np.arctan(l.hip_vector.get_x(), l.hip_vector.get_y())
+
+    for l in legs:
+        s2 = calc_knee_joint_vector(s1[j], j, hexapod.coxa, l.alpha)
+        l.knee_vector = calc_leg_vector(O, R, s2, u[j])
+        j += 1
+    
+    for l in legs:
+        #returns [phi, rho]
+        # need magnitude of vector
+        phi_rho = calc_intermediate(l.knee_vector, hexapod.coxa, hexapod.femur, hexapod.tibia)
+        
+        l.beta = np.arccos((hexapod.femur**2 + l.knee_vector - hexapod.tibia**2)/(2 * hexapod.femur * l.knee_vector.magnitude())) - (phi_rho[1] + phi_rho[0])
+
+        l.gamma = np.pi - np.arccos((hexapod.femur**2 + hexapod.tibia**2 - l.knee_vector.magnitude()**2)/ (2 * hexapod.femur * hexapod.tibia))
+
+
+def calc_ik(hexapod):
+    legs = hexapod.legs
+
+    for l in legs
+        l.alpha = np.arctan(l.y/l.x)
+        l.beta = np.arccos((-hexapod.tibia**2 + hexapod.femur**2 + l.x**2 + l.y**2 + l.z**2)/(2 * hexapod.femur * sqrt(l.x**2 + l.y**2 + l.z**2))) + np.arctan(l.z/sqrt(l.x**2 + l.y**2))
+        l.gamma = -np.arccos((l.x**2 + l.y**2 + l.z**2 - hexapod.femur**2 - hexapod.tibia**2)/ (2 * hexpod.femur * hexapod.tibia)
 
 # O: position vector of COR wrt ground
-# R: desired orientation matrix of the robot body
-# s_i: hip joint vector wrt body
+# R: desired orientation matrix of the platform body
+# s_i: hip joint vector wrt platform body
 # u_i: foot point vector wrt to ground
 
-def calc_hip_vector(O, R, s_i, u_i):
+def calc_leg_vector(O, R, s_i, u_i):
     return O + (R @ s_i) - u_i
 
+def calc_knee_joint_vector(s_i, i, l1, alpha)
+    return Vector(s_i.get_x_plat() + ((-1)**i) * l1 * np.cos(alpha),
+                  s_i.get_y_plat() + ((-1)**i) * l1 * np.sin(alpha),
+                  s_i.get_z_plat())
+
+# returns knee and ankle intermediate pair [phi, rho]
+# l1 l2 l3 are leg lengths
+def calc_intermediate(knee_vector, hip_vector, l1, l2, l3):
+    h = hip_vector.get_z_wrld()
+    h_prime = knee_vector.get_z_wrld()
+
+    rho = np.arctan(h_prime/sqrt(knee_vector.get_x_wrld()**2 + knee_vector.get_y_wrld()**2))
+
+    phi = np.arcsin((h_prime - h)/l1)
+
+    return phi, rho
 '''
 Input: Angle (deg)
 
