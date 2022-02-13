@@ -174,10 +174,10 @@ def calc_ik_parallel(orr, hexapod):
 def calc_ik(hexapod):
     legs = hexapod.legs
 
-    for l in legs
+    for l in legs:
         l.alpha = np.arctan(l.y/l.x)
         l.beta = np.arccos((-hexapod.tibia**2 + hexapod.femur**2 + l.x**2 + l.y**2 + l.z**2)/(2 * hexapod.femur * sqrt(l.x**2 + l.y**2 + l.z**2))) + np.arctan(l.z/sqrt(l.x**2 + l.y**2))
-        l.gamma = -np.arccos((l.x**2 + l.y**2 + l.z**2 - hexapod.femur**2 - hexapod.tibia**2)/ (2 * hexpod.femur * hexapod.tibia)
+        l.gamma = -np.arccos((l.x**2 + l.y**2 + l.z**2 - hexapod.femur**2 - hexapod.tibia**2)/ (2 * hexpod.femur * hexapod.tibia))
 
 # O: position vector of COR wrt ground
 # R: desired orientation matrix of the platform body
@@ -187,10 +187,8 @@ def calc_ik(hexapod):
 def calc_leg_vector(O, R, s_i, u_i):
     return O + (R @ s_i) - u_i
 
-def calc_knee_joint_vector(s_i, i, l1, alpha)
-    return Vector(s_i.get_x_plat() + ((-1)**i) * l1 * np.cos(alpha),
-                  s_i.get_y_plat() + ((-1)**i) * l1 * np.sin(alpha),
-                  s_i.get_z_plat())
+def calc_knee_joint_vector(s_i, i, l1, alpha):
+    return Vector(s_i.get_x_plat() + ((-1)**i) * l1 * np.cos(alpha), s_i.get_y_plat() + ((-1)**i) * l1 * np.sin(alpha), s_i.get_z_plat())
 
 # returns knee and ankle intermediate pair [phi, rho]
 # l1 l2 l3 are leg lengths

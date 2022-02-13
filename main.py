@@ -1,10 +1,7 @@
 import numpy as np
-from motion.maths import calc_jacobian, calc_fk
 from comm.lx16a import *
 
 if __name__ == '__main__':
-    JT = calc_jacobian(0, 0, (np.pi / 2))
-    torque = JT @ np.array([0,0,10])
     
     #offset is counter, clockwise, clockwise
     # alpha (-90, 90)
@@ -17,8 +14,8 @@ if __name__ == '__main__':
     gamma = 0 
 
     offset = 5
-    #LX16A.initialize("/dev/ttyUSB0")
-    LX16A.initialize("/dev/cu.usbserial-14140")
+    LX16A.initialize("/dev/ttyUSB0")
+    #LX16A.initialize("/dev/cu.usbserial-14140")
     try:
         servo_1 = LX16A(1)
         servo_2 = LX16A(2)
@@ -67,7 +64,7 @@ if __name__ == '__main__':
     print("Packets: " + "\n")
 
     for s in servos:
-        s.moveFromCenter(5, 1000)
+        s.moveFromCenter(10, 1000)
     
     print("\n")    
 
