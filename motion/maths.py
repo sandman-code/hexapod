@@ -1,10 +1,11 @@
 import numpy as np
 from math import sqrt, radians, sin, cos, degrees, acos, isnan
 
-L1 = 29.49
-L2 = 50.12
-L3 = 63.94
-
+#l1 = 65mm 
+#l2 = 40mm
+#l3 = 140mm 
+#hip to center = 85mm
+#when at 0 position z = 200mm
 #beta = 0.75 - wave gait
 
 '''
@@ -17,13 +18,11 @@ z_f/g(t + del_t) = z_f/g(t) + zdot_f/g * del_t
 
 
 class Vector:
-    __slots__ = ('x', 'y', 'z', 'id')
 
-    def __init__(self, x, y, z, id=None):
+    def __init__(self, x, y, z):
         self.x = x,
         self.y = y,
-        self.z = z,
-        self.id = id
+        self.z = z
 
     @property
     def vec(self):

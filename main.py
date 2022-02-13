@@ -17,7 +17,7 @@ if __name__ == '__main__':
     gamma = 0 
 
     offset = 5
-
+    #LX16A.initialize("/dev/ttyUSB0")
     LX16A.initialize("/dev/cu.usbserial-14140")
     try:
         servo_1 = LX16A(1)
@@ -67,7 +67,7 @@ if __name__ == '__main__':
     print("Packets: " + "\n")
 
     for s in servos:
-        s.moveFromCenter(0, 1000)
+        s.moveFromCenter(5, 1000)
     
     print("\n")    
 
