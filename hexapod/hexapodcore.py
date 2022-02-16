@@ -14,11 +14,11 @@
 
 # All lengths are in mm
 import numpy as np
+from motion.maths import *
 
-
-L1 = 80
-L2 = 80
-L3 = 100
+L1 = 65
+L2 = 40
+L3 = 140
 
 # Side length in mm
 SIDELENGTH = 90
@@ -27,7 +27,7 @@ SIDELENGTH = 90
 VEL = 0.05
 
 # L3 would equal the height of the robot
-HEIGHT = 100
+HEIGHT = 200
 
 # Duty factor of a wave gait
 DUTYFACTOR = 0.75
@@ -72,32 +72,46 @@ L_I = O + R * S1 - U
 class Hexapod:
 
     #Each leg has 3 angles (COXIA, FEMUR, TIBIA)
-    LEG_1 = [0, 0, 0]
-    LEG_2 = [0, 0, 0]
-    LEG_3 = [0, 0, 0]
-    LEG_4 = [0, 0, 0]
-    LEG_5 = [0, 0, 0]
-    LEG_6 = [0, 0, 0]
+    coxia = 65
+    femur = 40
+    tibia = 140
+
+    # Max velocity in (m/sec)
+    max_vel = 0.05
+
+    # L3 would equal the height of the robot
+    height = 200
+
+    # Duty factor of a wave gait
+    duty_factor = 0.75
+
+    # Vector from the center to the hip
+    hip_vector = 185
+
+    # Stride length of each leg
+    stride_length = 100
+
+    # Max height of the leg for the transfer phase
+    leg_height_max = 50
+
+    def __init__(self, motors):
+        self.legs = self.init_legs(motors)
+        self.origin_vector = Vector(0, 0, 200)
+        self.orientation = [0,0,0]
+
     
-    #Store each leg in an array
-    LEGS = [
-        LEG_1,
-        LEG_2,
-        LEG_3,
-        LEG_4,
-        LEG_5, 
-        LEG_6, 
-    ]
+    def init_legs(self, motors):
+        initial = [0,0,0]
+        legs = []
+        for x in range(5):
+            legs.append(Leg(initial, motors[x]))
 
-    def __init__(self, angles) -> None:
-        self.init_legs(angles)
-        pass
+        return legs
 
-    def init_legs(self, angles):
-        for leg in self.LEGS:
-            for i in range(5):
-                leg = angles[i]
+    def update_orientation(R):
+        self.orientation = R
 
-
-
+    def update_origin(O):
+        self.origin_vector = O
+        
 # 6 legs 6 points

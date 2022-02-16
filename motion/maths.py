@@ -201,6 +201,29 @@ def calc_intermediate(knee_vector, hip_vector, l1, l2, l3):
     phi = np.arcsin((h_prime - h)/l1)
 
     return phi, rho
+
+def calc_vel():
+    return 0
+
+def calc_hex_pos_vel(a, b, x_bg, z_bg, t, delta_t):
+    x_fg += cubic_vel(a, t) * delta_t
+    z_fg += cubic_vel(b, t) * delta_t
+
+    ground = Vector(x_fg, z_fg, 0)
+    known = Vector(x_bg, z_bg, 0)
+
+    return subtract_vectors(ground, known)
+
+    
+
+# V = L/T
+def u_fg(hexapod, v):
+    return v/(1-hexapod.beta)
+
+# (beta/1-beta)*V
+def u_fb(hexapod, v):
+    return ((hexapod.beta)/(1-hexapod.beta))*v
+
 '''
 Input: Angle (deg)
 
@@ -394,4 +417,7 @@ def trajectory_planning(q_0, q_f, v_0, v_f, t_0, t_f):
 
 def cubic_traj(a, t):
     return a(0) + a(1)*t + a(2)*(t**2) + a(3)*(t**3)
+
+def cubic_vel(a, t):
+    return a(1) + 2*a(2)*t + 3*a(3)*(t**2)
 
