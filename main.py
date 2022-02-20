@@ -1,5 +1,7 @@
 import numpy as np
 from comm.lx16a import *
+from motion.controller import *
+from hexapod.hexapodcore import Hexapod
 
 if __name__ == '__main__':
     
@@ -14,8 +16,10 @@ if __name__ == '__main__':
     gamma = 0 
 
     offset = 5
-    LX16A.initialize("/dev/ttyUSB0")
+    #LX16A.initialize("/dev/ttyUSB0")
     #LX16A.initialize("/dev/cu.usbserial-14140")
+
+    '''
     try:
         servo_1 = LX16A(1)
         servo_2 = LX16A(2)
@@ -60,13 +64,23 @@ if __name__ == '__main__':
         print(f"Servo {e.ID} is not responding. Exiting...")
         exit()
     
+    '''
+
+    '''
     print("\n")
     print("Packets: " + "\n")
 
     for s in servos:
-        s.moveFromCenter(10, 1000)
+        s.moveFromCenter(5, 1000)
     
-    print("\n")    
+    print("\n") 
+
+    '''
+
+    hexy = Hexapod()
+
+    walk(hexy, 0.05)
+    
 
     
 
