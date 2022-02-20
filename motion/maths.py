@@ -57,7 +57,12 @@ class Vector:
         return 0
 
 
-def calc_jacobian(theta1, theta2, theta3):
+def calc_jacobian(hexapod, theta1, theta2, theta3):
+
+    L1 = hexapod.coxa
+    L2 = hexapod.tibia
+    L3 = hexapod.femur
+
     J = np.zeros((3, 3))
 
     J[0, 0] = -(-np.sin(theta1)*np.sin(theta2)*np.cos(theta3)-np.sin(theta1)*np.cos(theta2)
@@ -80,7 +85,7 @@ def calc_jacobian(theta1, theta2, theta3):
     return J
 
 
-def calc_fk(angles):
+def calc_fk(coxa, tibia, femur, angles):
 
     # Populate Joint Angles
     x1 = angles[0]
@@ -90,9 +95,9 @@ def calc_fk(angles):
     # Populate DH (known)
 
     # a distances
-    a1 = L1
-    a2 = L2
-    a3 = L3
+    a1 = coxa
+    a2 = tibia
+    a3 = femur
 
     # alpha angles
     alpha1 = np.pi / 2
@@ -133,7 +138,7 @@ def calc_fk(angles):
         [0,0,0,1],
     ])
 
-    return T01 @ T12 @ T23 @ T34
+    return np.around((T01 @ T12 @ T23 @ T34), 3)
 
 # orr[alpha, beta, gamma]
 def calc_ik_parallel(orr, hexapod):
@@ -164,7 +169,7 @@ def calc_ik_parallel(orr, hexapod):
     for l in legs:
         #returns [phi, rho]
         # need magnitude of vector
-        phi_rho = calc_intermediate(l.knee_vector, hexapod.coxa, hexapod.femur, hexapod.tibia)
+        phi_rho = calc_intermediate(l.knee_vector, l.hip_vector, hexapod.coxa, hexapod.femur, hexapod.tibia)
         
         l.beta = np.arccos((hexapod.femur**2 + l.knee_vector - hexapod.tibia**2)/(2 * hexapod.femur * l.knee_vector.magnitude())) - (phi_rho[1] + phi_rho[0])
 
@@ -177,7 +182,7 @@ def calc_ik(hexapod):
     for l in legs:
         l.alpha = np.arctan(l.y/l.x)
         l.beta = np.arccos((-hexapod.tibia**2 + hexapod.femur**2 + l.x**2 + l.y**2 + l.z**2)/(2 * hexapod.femur * sqrt(l.x**2 + l.y**2 + l.z**2))) + np.arctan(l.z/sqrt(l.x**2 + l.y**2))
-        l.gamma = -np.arccos((l.x**2 + l.y**2 + l.z**2 - hexapod.femur**2 - hexapod.tibia**2)/ (2 * hexpod.femur * hexapod.tibia))
+        l.gamma = -np.arccos((l.x**2 + l.y**2 + l.z**2 - hexapod.femur**2 - hexapod.tibia**2)/ (2 * hexapod.femur * hexapod.tibia))
 
 # O: position vector of COR wrt ground
 # R: desired orientation matrix of the platform body

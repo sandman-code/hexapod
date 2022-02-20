@@ -3,8 +3,10 @@ from motion.maths import Vector, calc_fk
 
 class Leg:
 
-    def __init__(self, angles, motors):
+    def __init__(self, angles, motors, id):
         
+        self.id = id
+
         self.alpha = angles[0]
         self.beta = angles[1]
         self.gamma = angles[2]

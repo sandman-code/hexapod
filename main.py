@@ -2,6 +2,7 @@ import numpy as np
 from comm.lx16a import *
 from motion.controller import *
 from hexapod.hexapodcore import Hexapod
+from motion.maths import *
 
 if __name__ == '__main__':
     
@@ -79,10 +80,10 @@ if __name__ == '__main__':
 
     hexy = Hexapod()
 
-    walk(hexy, 0.05)
+    #walk(hexy, 0.05)
     
 
-    
+    print(calc_fk(hexy.coxia, hexy.tibia, hexy.femur, (30,30,30)))
 
 
 
