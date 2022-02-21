@@ -87,6 +87,10 @@ if __name__ == '__main__':
 
 
 
+    u = Vector(100, 0, 0)
+    o = Vector(0, 0, 200)
 
+    print(u.get_wrld())
+    print(u.get_plat((0,0,0), o))
 #b8:27:eb:ae:db:1d
 #130.215.210.179

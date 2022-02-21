@@ -20,14 +20,9 @@ z_f/g(t + del_t) = z_f/g(t) + zdot_f/g * del_t
 class Vector:
 
     def __init__(self, x, y, z):
-        self.x = x,
-        self.y = y,
+        self.x = x
+        self.y = y
         self.z = z
-
-    @property
-    def vec(self):
-        return self.x, self.y, self.z
-    
 
     def magnitude(self):
         return sqrt((self.x ** 2) + (self.y ** 2) + (self.z ** 2))
@@ -38,23 +33,29 @@ class Vector:
     def transposed(self):
         return np.transpose(self.vec_arr())
 
-    def get_x_wrld(self):
-        return 0
+    # all coordinates will start in the global cordinate 
+    def get_wrld(self):
+        return self.x, self.y, self.z
 
-    def get_y_wrld(self):
-        return 0
-    
-    def get_z_wrld(self):
-        return 0
 
-    def get_x_plat(self):
-        return 0
+    # in order to transform to the platform cordinate, will have to multiply rotation of platform and origin vector
+    def get_plat(self, r, o):
 
-    def get_y_plat(self):
-        return 0
+        pos_vec = np.array([self.x, self.y, self.z, 1])
+        
+        
+        z_rot = rotz(r[2])
+        y_rot = roty(r[1])
+        x_rot = rotx(r[0])
 
-    def get_z_plat(self):
-        return 0
+        rotation = z_rot @ y_rot @ x_rot
+        rotation[0, 3] = o.x
+        rotation[1, 3] = o.y
+        rotation[2, 3] = o.z
+
+        plat_vec = np.linalg.inv(rotation) @ pos_vec
+        
+        return Vector(plat_vec[0], plat_vec[1], plat_vec[2])
 
 
 def calc_jacobian(hexapod, theta1, theta2, theta3):
