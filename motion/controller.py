@@ -1,3 +1,4 @@
+from motion.maths import calc_ik_parallel
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -18,7 +19,9 @@ def walk(hexapod, v):
     
     T = hexapod.stride_length / v
 
-    u = (hexapod.beta / (1 - hexapod.beta)) * v
+    
+    u_fb = v / (1 - hexapod.beta)
+    u_fg = u_fb - v
 
     T_t = (1 - hexapod.beta) * T
 
@@ -35,7 +38,7 @@ def walk(hexapod, v):
 
     transfer_time = np.array([t0, t1, t2, t3, t4, t5])
 
-    x_max_vel = (2 * (t5 - t0) * u) / ((t4 - t1) * (t3 - t2))
+    x_max_vel = (2 * (t5 - t0) * u_fg) / ((t4 - t1) * (t3 - t2))
 
     z_max_vel = x_max_vel
 
@@ -64,7 +67,7 @@ def walk(hexapod, v):
     z_pos_ground = np.zeros((6,6))
     
     for z in range(5):
-        z_pos_ground[0, z] = hexapod.height
+        z_pos_ground[z, 0] = hexapod.height
 
     D = hexapod.coxia + hexapod.femur
     alphaH = np.array([-30, 30, -90, 90, -150, 150])
@@ -92,6 +95,11 @@ def walk(hexapod, v):
             x_pos[l, n] = x_pos_ground[l, n] - x_pos[l, n]
             z_pos[l, n] = z_pos_ground[l, n] - z_pos[l, n]
     
+
+    #calc_ik_parallel([0,0,0], hexapod)
+
+
+
     print("Time Stamps")
     print(transfer_time)
     print("X Vel")

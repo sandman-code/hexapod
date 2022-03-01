@@ -1,4 +1,3 @@
-import numpy as np
 from motion.maths import Vector, calc_fk
 
 class Leg:
