@@ -176,14 +176,20 @@ def calc_ik_parallel(orr, hexapod):
 
         l.gamma = np.pi - np.arccos((hexapod.femur**2 + hexapod.tibia**2 - l.knee_vector.magnitude()**2)/ (2 * hexapod.femur * hexapod.tibia))
 
+# for serial leg WRT to hip join
+def calc_ik(hexapod, position):
 
-def calc_ik(hexapod):
-    legs = hexapod.legs
+    # EE position is all WRT to hip cordinate system
+    x = position[0]
+    y = position[1]
+    z = position[2]
 
-    for l in legs:
-        l.alpha = np.arctan(l.y/l.x)
-        l.beta = np.arccos((-hexapod.tibia**2 + hexapod.femur**2 + l.x**2 + l.y**2 + l.z**2)/(2 * hexapod.femur * sqrt(l.x**2 + l.y**2 + l.z**2))) + np.arctan(l.z/sqrt(l.x**2 + l.y**2))
-        l.gamma = -np.arccos((l.x**2 + l.y**2 + l.z**2 - hexapod.femur**2 - hexapod.tibia**2)/ (2 * hexapod.femur * hexapod.tibia))
+
+    alpha = np.arctan(y/x)
+    beta = np.arccos((-hexapod.tibia**2 + hexapod.femur**2 + x**2 + y**2 + z**2)/(2 * hexapod.femur * sqrt(x**2 + y**2 + z**2))) + np.arctan(z/sqrt(x**2 + y**2))
+    gamma = -np.arccos((x**2 + y**2 + z**2 - hexapod.femur**2 - hexapod.tibia**2)/ (2 * hexapod.femur * hexapod.tibia))
+
+    return alpha, beta, gamma
 
 # O: position vector of COR wrt ground
 # R: desired orientation matrix of the platform body
@@ -413,17 +419,18 @@ def pos_vector():
     return 0
     
 def trajectory_planning(q_0, q_f, v_0, v_f, t_0, t_f):
-    m = np.matrix(
+    m = np.matrix([
             [1, t_0, t_0**2, t_0**3],
             [0, 1, 2*t_0, 3*(t_0**2)],
             [1, t_f, t_f**2, t_f**3],
-            [0, 1, 2*t_f, 3*(t_f**2)])
-    given = np.array(q_0, v_0, q_f, v_f)
-    return np.matmul(given, np.linalg.inv(m))  
+            [0, 1, 2*t_f, 3*(t_f**2)]])
+    given = np.array([q_0, v_0, q_f, v_f])
+    values = np.matmul(given, np.linalg.inv(m))
+    return np.transpose(values) 
 
 def cubic_traj(a, t):
-    return a(0) + a(1)*t + a(2)*(t**2) + a(3)*(t**3)
+    return a[0] + a[1]*t + a[2]*(t**2) + a[3]*(t**3)
 
 def cubic_vel(a, t):
-    return a(1) + 2*a(2)*t + 3*a(3)*(t**2)
+    return a[1] + 2*a[2]*t + 3*a[3]*(t**2)
 

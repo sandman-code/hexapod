@@ -53,21 +53,16 @@ class Hexapod:
     # Max height of the leg for the transfer phase
     leg_height_max = 50 / 1000
 
-    def __init__(self):
+
+    def __init__(self, legs = None):
         self.origin_vector = Vector(0, 0, self.height)
         self.orientation = [0,0,0]
-
+        self.legs = legs
     
-    def init_legs(self, motors):
-        initial = [0,0,0]
-        for x in range(5):
-            self.legs.append(Leg(initial, motors[x]))
-
-
     def update_orientation(self, r):
         self.orientation = r
 
     def update_origin(self, o):
         self.origin_vector = o
-        
+
 # 6 legs 6 points
