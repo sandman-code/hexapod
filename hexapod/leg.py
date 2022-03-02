@@ -45,17 +45,17 @@ class Leg:
             raise ServoArgumentError(self.id, "Input out of range")
 
         self.alpha = alpha
-        self.alpha_motor.moveFromCenter(alpha, time)
+        self.alpha_motor.moveFromCenter( int(alpha), time)
         
       
 
     def move_beta(self, beta, time):
-        
+
         if beta > 90 or beta < -70:
             raise ServoArgumentError(self.id, "Input out of range")
             
         self.beta = beta
-        self.beta_motor.moveFromCenter(beta, time)
+        self.beta_motor.moveFromCenter( int(beta), time)
 
     def move_gamma(self, gamma, time):
 
@@ -63,7 +63,7 @@ class Leg:
          raise ServoArgumentError(self.id, "Input out of range")
 
         self.gamma = gamma
-        self.gamma_motor.moveFromCenter(gamma, time)
+        self.gamma_motor.moveFromCenter( int(gamma), time)
 
     def update_ee(self):
         pos = calc_fk(self.alpha, self.beta, self.gamma)
