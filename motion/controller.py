@@ -1,4 +1,5 @@
 from ast import walk
+from time import time
 from motion.maths import *
 from math import cos, gamma, sin
 import numpy as np
@@ -233,29 +234,31 @@ def walk(hexapod, v):
             gamma6 = cubic_traj(z_coeff_6, i)
 
             
-            leg1.move_alpha(alpha1, 0)
-            leg1.move_beta(beta1, 0)
-            leg1.move_gamma(gamma1, 0)
+            leg1.move_alpha(alpha1, 6)
+            leg1.move_beta(beta1, 6)
+            leg1.move_gamma(gamma1, 6)
 
-            leg2.move_alpha(alpha2, 0)
-            leg2.move_beta(beta2, 0)
-            leg2.move_gamma(gamma2, 0)
+            leg2.move_alpha(alpha2, 6)
+            leg2.move_beta(beta2, 6)
+            leg2.move_gamma(gamma2, 6)
 
-            leg3.move_alpha(alpha3, 0)
-            leg3.move_beta(beta3, 0)
-            leg3.move_gamma(gamma3, 0)
+            leg3.move_alpha(alpha3, 6)
+            leg3.move_beta(beta3, 6)
+            leg3.move_gamma(gamma3, 6)
             
-            leg4.move_alpha(alpha4, 0)
-            leg4.move_beta(beta4, 0)
-            leg4.move_gamma(gamma4, 0)
+            leg4.move_alpha(alpha4, 6)
+            leg4.move_beta(beta4, 6)
+            leg4.move_gamma(gamma4, 6)
 
-            leg5.move_alpha(alpha5, 0)
-            leg5.move_beta(beta5, 0)
-            leg5.move_gamma(gamma5, 0)
+            leg5.move_alpha(alpha5, 6)
+            leg5.move_beta(beta5, 6)
+            leg5.move_gamma(gamma5, 6)
 
-            leg6.move_alpha(alpha6, 0)
-            leg6.move_beta(beta6, 0)
-            leg6.move_gamma(gamma6, 0)
+            leg6.move_alpha(alpha6, 6)
+            leg6.move_beta(beta6, 6)
+            leg6.move_gamma(gamma6, 6)
+
+            time.sleep(1)
 
             i += dt
             
