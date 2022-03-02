@@ -233,29 +233,29 @@ def walk(hexapod, v):
             gamma6 = cubic_traj(z_coeff_6, i)
 
             
-            leg1.move_alpha(alpha1, i)
-            leg1.move_beta(beta1, i)
-            leg1.move_gamma(gamma1, i)
+            leg1.move_alpha(alpha1, 0)
+            leg1.move_beta(beta1, 0)
+            leg1.move_gamma(gamma1, 0)
 
-            leg2.move_alpha(alpha2, i)
-            leg2.move_beta(beta2, i)
-            leg2.move_gamma(gamma2, i)
+            leg2.move_alpha(alpha2, 0)
+            leg2.move_beta(beta2, 0)
+            leg2.move_gamma(gamma2, 0)
 
-            leg3.move_alpha(alpha3, i)
-            leg3.move_beta(beta3, i)
-            leg3.move_gamma(gamma3, i)
+            leg3.move_alpha(alpha3, 0)
+            leg3.move_beta(beta3, 0)
+            leg3.move_gamma(gamma3, 0)
             
-            leg4.move_alpha(alpha4, i)
-            leg4.move_beta(beta4, i)
-            leg4.move_gamma(gamma4, i)
+            leg4.move_alpha(alpha4, 0)
+            leg4.move_beta(beta4, 0)
+            leg4.move_gamma(gamma4, 0)
 
-            leg5.move_alpha(alpha5, i)
-            leg5.move_beta(beta5, i)
-            leg5.move_gamma(gamma5, i)
+            leg5.move_alpha(alpha5, 0)
+            leg5.move_beta(beta5, 0)
+            leg5.move_gamma(gamma5, 0)
 
-            leg6.move_alpha(alpha6, i)
-            leg6.move_beta(beta6, i)
-            leg6.move_gamma(gamma6, i)
+            leg6.move_alpha(alpha6, 0)
+            leg6.move_beta(beta6, 0)
+            leg6.move_gamma(gamma6, 0)
 
             i += dt
             
