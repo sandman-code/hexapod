@@ -1,5 +1,5 @@
 from ast import walk
-from time import time
+from time import sleep
 from motion.maths import *
 from math import cos, gamma, sin
 import numpy as np
@@ -258,7 +258,7 @@ def walk(hexapod, v):
             leg6.move_beta(beta6, 6)
             leg6.move_gamma(gamma6, 6)
 
-            time.sleep(1)
+            sleep(1)
 
             i += dt
             
