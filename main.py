@@ -17,11 +17,11 @@ if __name__ == '__main__':
     gamma = 0 
 
     offset = 5
-    #LX16A.initialize("/dev/ttyUSB0")
+    LX16A.initialize("/dev/ttyUSB0")
     #LX16A.initialize("/dev/cu.usbserial-14140")
     #LX16A.initialize("COM3")
     
-    '''
+    
     
     
   
@@ -65,7 +65,7 @@ if __name__ == '__main__':
         print(f"Servo {e.ID} is not responding. Exiting...")
         exit()
     
-    '''
+    
 
     '''
     print("\n")
@@ -78,7 +78,7 @@ if __name__ == '__main__':
 
     '''
 
-    hexy = Hexapod()
+    hexy = Hexapod(LEGS)
 
     walk(hexy, 0.05)
     
