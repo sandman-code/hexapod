@@ -1,4 +1,5 @@
 from motion.maths import Vector, calc_fk
+from comm.lx16a import ServoArgumentError
 
 class Leg:
 
@@ -39,14 +40,28 @@ class Leg:
         return self.gamma
 
     def move_alpha(self, alpha, time):
+
+        if alpha > 90 or alpha < -90:
+            raise ServoArgumentError(self.id, "Input out of range")
+
         self.alpha = alpha
         self.alpha_motor.moveFromCenter(alpha, time)
+        
+      
 
     def move_beta(self, beta, time):
+        
+        if beta > 90 or beta < -70:
+            raise ServoArgumentError(self.id, "Input out of range")
+            
         self.beta = beta
         self.beta_motor.moveFromCenter(beta, time)
 
     def move_gamma(self, gamma, time):
+
+        if gamma > 90 or gamma < -90:
+         raise ServoArgumentError(self.id, "Input out of range")
+
         self.gamma = gamma
         self.gamma_motor.moveFromCenter(gamma, time)
 
