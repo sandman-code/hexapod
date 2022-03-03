@@ -1,4 +1,5 @@
 from ast import walk
+from time import time
 from motion.maths import *
 from math import cos, gamma, sin
 import numpy as np
@@ -158,14 +159,7 @@ def generate_traj(hexapod, v):
 
 def walk(hexapod, v):
 
-    leg1 = hexapod.legs[0]
-    leg2 = hexapod.legs[1]
-    leg3 = hexapod.legs[2]
-    leg4 = hexapod.legs[3]
-    leg5 = hexapod.legs[4]
-    leg6 = hexapod.legs[5]
-
-
+    dt = 1
     points = generate_traj(hexapod, v)
 
     x_pos = points[0]
@@ -176,88 +170,30 @@ def walk(hexapod, v):
     y_vel = points[1]
     z_vel = points[2]
     
+    q_t = np.empty((6,6), dtype=object)
+    qd_t = np.empty((6,6), dtype=object)
 
+    for l in range(6):
+        for t in range(6):
+            q_t[l, t] = calc_ik(hexapod, [x_pos[l, t], y_pos[l, t], z_pos[l, t]]) 
+
+    for l2 in range(6):
+        for t in range(6):
+            angles = q_t[l2, t]
+            J = calc_jacobian([angles[0], angles[1], angles[2]])
+            qd_t[l2, t] = np.matmul(np.inverse(J), np.transpose(angles))
+    
     for t in range(5):
-
-        x_coeff_1 = trajectory_planning(x_pos[0,t], x_pos[0,t+1], x_vel[0,t], x_vel[0,t+1], t, t+1)
-        y_coeff_1 = trajectory_planning(y_pos[0,t], y_pos[0,t+1], y_vel[0,t], y_vel[0,t+1], t, t+1)
-        z_coeff_1 = trajectory_planning(z_pos[0,t], z_pos[0,t+1], z_vel[0,t], z_vel[0,t+1], t, t+1)
-
-        x_coeff_2 = trajectory_planning(x_pos[1,t], x_pos[1,t+1], x_vel[1,t], x_vel[1,t+1], t, t+1)
-        y_coeff_2 = trajectory_planning(y_pos[1,t], y_pos[1,t+1], y_vel[1,t], y_vel[1,t+1], t, t+1)
-        z_coeff_2 = trajectory_planning(z_pos[1,t], z_pos[1,t+1], z_vel[1,t], z_vel[1,t+1], t, t+1)        
-
-        x_coeff_3 = trajectory_planning(x_pos[2,t], x_pos[2,t+1], x_vel[2,t], x_vel[2,t+1], t, t+1)
-        y_coeff_3 = trajectory_planning(y_pos[2,t], y_pos[2,t+1], y_vel[2,t], y_vel[2,t+1], t, t+1)
-        z_coeff_3 = trajectory_planning(z_pos[2,t], z_pos[2,t+1], z_vel[2,t], z_vel[2,t+1], t, t+1)
-
-        x_coeff_4 = trajectory_planning(x_pos[3,t], x_pos[3,t+1], x_vel[3,t], x_vel[3,t+1], t, t+1)
-        y_coeff_4 = trajectory_planning(y_pos[3,t], y_pos[3,t+1], y_vel[3,t], y_vel[3,t+1], t, t+1)
-        z_coeff_4 = trajectory_planning(z_pos[3,t], z_pos[3,t+1], z_vel[3,t], z_vel[3,t+1], t, t+1)
-
-        x_coeff_5 = trajectory_planning(x_pos[4,t], x_pos[4,t+1], x_vel[4,t], x_vel[4,t+1], t, t+1)
-        y_coeff_5 = trajectory_planning(y_pos[4,t], y_pos[4,t+1], y_vel[4,t], y_vel[4,t+1], t, t+1)
-        z_coeff_5 = trajectory_planning(z_pos[4,t], z_pos[4,t+1], z_vel[4,t], z_vel[4,t+1], t, t+1)
-
-        x_coeff_6 = trajectory_planning(x_pos[5,t], x_pos[5,t+1], x_vel[5,t], x_vel[5,t+1], t, t+1)
-        y_coeff_6 = trajectory_planning(y_pos[5,t], y_pos[5,t+1], y_vel[5,t], y_vel[5,t+1], t, t+1)
-        z_coeff_6 = trajectory_planning(z_pos[5,t], z_pos[5,t+1], z_vel[5,t], z_vel[5,t+1], t, t+1)
-
-        i = 0
-        dt = 0.5
-
-        while i < 1:
-
-            alpha1 = cubic_traj(x_coeff_1, i)
-            beta1 = cubic_traj(y_coeff_1, i)
-            gamma1 = cubic_traj(z_coeff_1, i)
-
-            alpha2 = cubic_traj(x_coeff_2, i)
-            beta2 = cubic_traj(y_coeff_2, i)
-            gamma2 = cubic_traj(z_coeff_2, i)
-
-            alpha3 = cubic_traj(x_coeff_3, i)
-            beta3 = cubic_traj(y_coeff_3, i)
-            gamma3 = cubic_traj(z_coeff_3, i)
-
-            alpha4 = cubic_traj(x_coeff_4, i)
-            beta4 = cubic_traj(y_coeff_4, i)
-            gamma4 = cubic_traj(z_coeff_4, i)
-
-            alpha5 = cubic_traj(x_coeff_5, i)
-            beta5 = cubic_traj(y_coeff_5, i)
-            gamma5 = cubic_traj(z_coeff_5, i)
-
-            alpha6 = cubic_traj(x_coeff_6, i)
-            beta6 = cubic_traj(y_coeff_6, i)
-            gamma6 = cubic_traj(z_coeff_6, i)
-
-            
-            leg1.move_alpha(alpha1, i)
-            leg1.move_beta(beta1, i)
-            leg1.move_gamma(gamma1, i)
-
-            leg2.move_alpha(alpha2, i)
-            leg2.move_beta(beta2, i)
-            leg2.move_gamma(gamma2, i)
-
-            leg3.move_alpha(alpha3, i)
-            leg3.move_beta(beta3, i)
-            leg3.move_gamma(gamma3, i)
-            
-            leg4.move_alpha(alpha4, i)
-            leg4.move_beta(beta4, i)
-            leg4.move_gamma(gamma4, i)
-
-            leg5.move_alpha(alpha5, i)
-            leg5.move_beta(beta5, i)
-            leg5.move_gamma(gamma5, i)
-
-            leg6.move_alpha(alpha6, i)
-            leg6.move_beta(beta6, i)
-            leg6.move_gamma(gamma6, i)
-
-            i += dt
+        for a in range(6):
+            curr_leg = hexapod.legs[a]
+            coeffs = trajectory_planning(q_t[a,t], q_t[a, t+1], qd_t[a,t], qd_t[a,t], 0, dt)
+            alpha = cubic_traj(coeffs[0], dt)
+            beta = cubic_traj(coeffs[1], dt)
+            gamma = cubic_traj(coeffs[2], dt)
+            curr_leg.move_alpha(alpha, dt)
+            curr_leg.move_beta(beta, dt)
+            curr_leg.move_gamma(gamma, dt)
+            time.sleep(1)
             
 
     
