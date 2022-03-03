@@ -192,5 +192,3 @@ def walk(hexapod, v):
                 curr_leg.move_alpha(alpha, dt)
                 curr_leg.move_beta(beta, dt)
                 curr_leg.move_gamma(gamma, dt)
-            
-            
