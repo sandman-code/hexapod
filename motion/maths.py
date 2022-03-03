@@ -60,7 +60,7 @@ class Vector:
 
 def calc_jacobian(hexapod, theta1, theta2, theta3):
 
-    L1 = hexapod.coxa
+    L1 = hexapod.coxia
     L2 = hexapod.tibia
     L3 = hexapod.femur
 
