@@ -17,14 +17,14 @@ if __name__ == '__main__':
     gamma = 0 
 
     offset = 5
-    LX16A.initialize("/dev/ttyUSB0")
+    #LX16A.initialize("/dev/ttyUSB0")
     #LX16A.initialize("/dev/cu.usbserial-14140")
     #LX16A.initialize("COM3")
     
     
     
     
-  
+    
     try:
         
         servos = (LX16A(1),
@@ -78,22 +78,18 @@ if __name__ == '__main__':
 
     '''
 
+    #hexy = Hexapod()
     hexy = Hexapod(LEGS)
 
     walk(hexy, 0.05)
     
-    '''
     
     
-    print(calc_fk(hexy.coxia, hexy.tibia, hexy.femur, (30,30,30)))
+    
+    #print(calc_fk(hexy.coxia, hexy.tibia, hexy.femur, (0,0,0)))
 
 
 
-    u = Vector(100, 0, 0)
-    o = Vector(0, 0, 200)
 
-    print(u.get_wrld())
-    print(u.get_plat((30,30,30), o).vec_arr())
-    '''
 #b8:27:eb:ae:db:1d
 #130.215.210.179

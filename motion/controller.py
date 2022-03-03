@@ -178,6 +178,8 @@ def walk(hexapod, v):
             print(J)
             qd_t[l2, t] = np.matmul(np.linalg.inv(J), np.transpose(angles))
     
+    print(q_t)
+    print(qd_t)
     
 
     for t in range(5):

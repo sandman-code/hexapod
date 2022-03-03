@@ -44,9 +44,9 @@ class Vector:
         pos_vec = np.array([self.x, self.y, self.z, 1])
         
         
-        z_rot = rotz(r[2])
-        y_rot = roty(r[1])
-        x_rot = rotx(r[0])
+        z_rot = rotz(radians(r[2]))
+        y_rot = roty(radians(r[1]))
+        x_rot = rotx(radians(r[0]))
 
         rotation = z_rot @ y_rot @ x_rot
         rotation[0, 3] = o.x
@@ -64,9 +64,13 @@ def calc_jacobian(hexapod, theta1, theta2, theta3):
     L2 = hexapod.tibia
     L3 = hexapod.femur
 
+    theta1 = radians(theta1)
+    theta2 = radians(theta2)
+    theta3 = radians(theta3)
+
     J = np.zeros((3, 3))
 
-    J[0, 0] = -(-np.sin(theta1)*np.sin(theta2)*np.cos(theta3)-np.sin(theta1)*np.cos(theta2)
+    J[0, 0] = -(np.sin(theta1)*np.sin(theta2)*np.cos(theta3)-np.sin(theta1)*np.cos(theta2)
                 * np.sin(theta3))*L3-np.sin(theta3)*L2*np.cos(theta2)-L1*np.sin(theta1)
     J[0, 1] = -(-np.cos(theta1)*np.sin(theta2)*np.sin(theta3)-np.cos(theta1)
                 * np.cos(theta2)*np.cos(theta3))*L3-np.cos(theta1)*L2*np.sin(theta2)
@@ -89,9 +93,9 @@ def calc_jacobian(hexapod, theta1, theta2, theta3):
 def calc_fk(coxa, tibia, femur, angles):
 
     # Populate Joint Angles
-    x1 = angles[0]
-    x2 = angles[1]
-    x3 = angles[2]
+    x1 = radians(angles[0])
+    x2 = radians(angles[1])
+    x3 = radians(angles[2])
 
     # Populate DH (known)
 
@@ -145,7 +149,7 @@ def calc_fk(coxa, tibia, femur, angles):
 def calc_ik_parallel(orr, hexapod):
 
     O = hexapod.origin_vector
-    R = rotz(orr[0]) @ roty(orr[1]) @ rotx(orr[2])
+    R = rotz(radians(orr[0])) @ roty(radians(orr[1])) @ rotx(radians(orr[2]))
     s1 = hexapod.hip_vector
     u = hexapod.leg_pos
 
@@ -160,7 +164,7 @@ def calc_ik_parallel(orr, hexapod):
         i += 1
 
     for l in legs:
-        l.alpha = np.arctan(l.hip_vector.get_x(), l.hip_vector.get_y())
+        l.alpha = degrees(np.arctan(l.hip_vector.get_x(), l.hip_vector.get_y()))
 
     for l in legs:
         s2 = calc_knee_joint_vector(s1[j], j, hexapod.coxa, l.alpha)
@@ -172,24 +176,24 @@ def calc_ik_parallel(orr, hexapod):
         # need magnitude of vector
         phi_rho = calc_intermediate(l.knee_vector, l.hip_vector, hexapod.coxa, hexapod.femur, hexapod.tibia)
         
-        l.beta = np.arccos((hexapod.femur**2 + l.knee_vector - hexapod.tibia**2)/(2 * hexapod.femur * l.knee_vector.magnitude())) - (phi_rho[1] + phi_rho[0])
+        l.beta = degrees(np.arccos((hexapod.femur**2 + l.knee_vector - hexapod.tibia**2)/(2 * hexapod.femur * l.knee_vector.magnitude())) - (phi_rho[1] + phi_rho[0]))
 
-        l.gamma = np.pi - np.arccos((hexapod.femur**2 + hexapod.tibia**2 - l.knee_vector.magnitude()**2)/ (2 * hexapod.femur * hexapod.tibia))
+        l.gamma = degrees(np.pi - np.arccos((hexapod.femur**2 + hexapod.tibia**2 - l.knee_vector.magnitude()**2)/ (2 * hexapod.femur * hexapod.tibia)))
 
 # for serial leg WRT to hip join
 def calc_ik(hexapod, position):
 
     # EE position is all WRT to hip cordinate system
-    x = position[0]
-    y = position[1]
-    z = position[2]
+    x = radians(position[0])
+    y = radians(position[1])
+    z = radians(position[2])
 
 
     alpha = np.arctan(y/x)
     beta = np.arccos((-hexapod.tibia**2 + hexapod.femur**2 + x**2 + y**2 + z**2)/(2 * hexapod.femur * sqrt(x**2 + y**2 + z**2))) + np.arctan(z/sqrt(x**2 + y**2))
     gamma = -np.arccos((x**2 + y**2 + z**2 - hexapod.femur**2 - hexapod.tibia**2)/ (2 * hexapod.femur * hexapod.tibia))
 
-    return alpha, beta, gamma
+    return degrees(alpha), degrees(beta), degrees(gamma)
 
 # O: position vector of COR wrt ground
 # R: desired orientation matrix of the platform body
@@ -433,4 +437,3 @@ def cubic_traj(a, t):
 
 def cubic_vel(a, t):
     return a[1] + 2*a[2]*t + 3*a[3]*(t**2)
-
