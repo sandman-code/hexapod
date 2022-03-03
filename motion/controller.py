@@ -174,7 +174,7 @@ def walk(hexapod, v):
     for l2 in range(6):
         for t in range(6):
             angles = q_t[l2, t]
-            J = calc_jacobian([angles[0], angles[1], angles[2]])
+            J = calc_jacobian(hexapod, angles[0], angles[1], angles[2])
             qd_t[l2, t] = np.matmul(np.inverse(J), np.transpose(angles))
     
     
