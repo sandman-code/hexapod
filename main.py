@@ -17,7 +17,7 @@ if __name__ == '__main__':
     gamma = 0 
 
     offset = 5
-    #LX16A.initialize("/dev/ttyUSB0")
+    LX16A.initialize("/dev/ttyUSB0")
     #LX16A.initialize("/dev/cu.usbserial-14140")
     #LX16A.initialize("COM3")
     
@@ -81,12 +81,12 @@ if __name__ == '__main__':
     #hexy = Hexapod()
     hexy = Hexapod(LEGS)
 
-    walk(hexy, 0.05)
-    
-    
-    
-    
-    #print(calc_fk(hexy.coxia, hexy.tibia, hexy.femur, (0,0,0)))
+    #walk(hexy, 0.05)
+    #generate_traj(hexy, 0.05)
+    move_leg_4(hexy, 0.05)
+
+    #print(calc_ik(hexy, [0, 0, 0]))
+    #print(calc_fk(hexy.coxia, hexy.femur, hexy.tibia, (0,0,0)))
 
 
 

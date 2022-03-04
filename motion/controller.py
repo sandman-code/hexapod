@@ -9,9 +9,9 @@ def home(hexapod):
     legs = hexapod.legs
 
     for l in legs:
-        l.move_alpha = 5
-        l.move_beta = 5
-        l.move_gamma = 5
+        l.move_alpha(0, 100)
+        l.move_beta(0, 100)
+        l.move_gamma(0, 100)
 
     print("Robot Calibrated")
 
@@ -60,30 +60,30 @@ def generate_traj(hexapod, v):
 
     for j in range(6):
         z_foot_ground[j, 0] = 0
-        z_foot_ground[j, 1] = z_foot_ground[i, 0] + (t1 - t0) * (z_max_vel / 2)
-        z_foot_ground[j, 2] = z_foot_ground[i, 1] + (t3 - t2) * (z_max_vel / 2)
-        z_foot_ground[j, 3] = z_foot_ground[i, 2] + 0
-        z_foot_ground[j, 4] = z_foot_ground[i, 3] - (t4 - t3) * (z_max_vel / 2)
-        z_foot_ground[j, 5] = z_foot_ground[i, 4] - (t5 - t4) * (z_max_vel / 2)
+        z_foot_ground[j, 1] = z_foot_ground[j, 0] + (t1 - t0) * (z_max_vel / 2)
+        z_foot_ground[j, 2] = z_foot_ground[j, 1] + (t2 - t1) * (z_max_vel / 2)
+        z_foot_ground[j, 3] = z_foot_ground[j, 2] + 0
+        z_foot_ground[j, 4] = z_foot_ground[j, 3] - (t4 - t3) * (z_max_vel / 2)
+        z_foot_ground[j, 5] = z_foot_ground[j, 4] - (t5 - t4) * (z_max_vel / 2)
 
     z_body_ground = np.zeros((6,6))
     
     for z in range(6):
-        z_body_ground[z, 0] = hexapod.height
+        z_body_ground[z, 0] = hexapod.tibia
 
     D = hexapod.coxia + hexapod.femur
-    alphaH = np.array([-30, 30, -90, 90, -150, 150])
+    alphaH = np.array([radians(-30), radians(30), radians(-90), radians(90), radians(-150), radians(150)])
 
     
 
     x_body_ground = np.zeros((6,6))
 
     x_body_ground[0, 0] = -((1-hexapod.beta)/2) * hexapod.stride_length - D * cos(alphaH[0])
-    x_body_ground[0, 1] = -((1-hexapod.beta)/2) * hexapod.stride_length - D * cos(alphaH[1])
-    x_body_ground[0, 2] = -((1-hexapod.beta)/2) * hexapod.stride_length
-    x_body_ground[0, 3] = -((1-hexapod.beta)/2) * hexapod.stride_length
-    x_body_ground[0, 4] = -((1-hexapod.beta)/2) * hexapod.stride_length - D * cos(alphaH[4])
-    x_body_ground[0, 5] = -((1-hexapod.beta)/2) * hexapod.stride_length - D * cos(alphaH[5])
+    x_body_ground[1, 0] = -((1-hexapod.beta)/2) * hexapod.stride_length - D * cos(alphaH[1])
+    x_body_ground[2, 0] = -((1-hexapod.beta)/2) * hexapod.stride_length
+    x_body_ground[3, 0] = -((1-hexapod.beta)/2) * hexapod.stride_length
+    x_body_ground[4, 0] = -((1-hexapod.beta)/2) * hexapod.stride_length - D * cos(alphaH[4])
+    x_body_ground[5, 0] = -((1-hexapod.beta)/2) * hexapod.stride_length - D * cos(alphaH[5])
 
     d_t = T_t / 5
 
@@ -94,7 +94,7 @@ def generate_traj(hexapod, v):
 
     x_foot_body = np.zeros((6,6))
     z_foot_body = np.zeros((6,6))
-    y_foot_body = np.array([D*sin(30), -D*sin(30), D, -D, D*sin(30), -D*sin(30)])
+    y_foot_body = np.array([D*sin(radians(30)), -D*sin(radians(30)), D, -D, D*sin(radians(30)), -D*sin(radians(30))])
 
     x_dotfb = np.zeros((6,6))
     z_dotfb = np.zeros((6,6))
@@ -120,7 +120,7 @@ def generate_traj(hexapod, v):
             z_body_ground[l, t+1] = z_body_ground[l, t] + (z_dotbg * d_t)
 
         for n in range(6):
-            x_foot_body[l, n] = z_foot_ground[l, n] - x_body_ground[l, n]
+            x_foot_body[l, n] = x_foot_ground[l, n] - x_body_ground[l, n]
             z_foot_body[l, n] = z_foot_ground[l, n] - z_body_ground[l, n]
 
             x_foot_hip[l, n] = np.dot(np.array([cos(alphaH[n]), -sin(alphaH[n]),0]), np.array([[x_foot_body[l,n]], [y_foot_body[l]], [z_foot_body[l,n]]]))
@@ -133,6 +133,7 @@ def generate_traj(hexapod, v):
     
     print("X Pos")
     print(x_foot_body)
+    print(x_body_ground)
     print("Z Pos")
     print(z_foot_body)
 
@@ -147,10 +148,22 @@ def generate_traj(hexapod, v):
     ax3.plot(transfer_time, x_foot_ground[2, :])
     ax4.set_title("Time v. Z Position WRT Ground")
     ax4.plot(transfer_time, z_foot_ground[2, :])
+
+    fig2, (ax5, ax6, ax7) = plt.subplots(3)
+    ax5.set_title("X v. Z Position WRT Ground")
+    ax5.plot(x_foot_ground[2,:], z_foot_ground[2,:])
+    ax6.set_title("X v. Z Position WRT Body")
+    ax6.plot(x_foot_body[2,:], z_foot_body[2,:])
+    ax7.set_title("X Position of Body")
+    ax7.plot(transfer_time, x_body_ground[1,:])
+
+    fig2.tight_layout()
     fig.tight_layout()
     plt.show()
 
-
+    print(x_foot_hip)
+    print(y_foot_hip)
+    print(z_foot_hip)
     return (x_foot_hip, y_foot_hip, z_foot_hip, x_dotfh, y_dotfh, z_dotfh)
 
 
@@ -195,3 +208,38 @@ def walk(hexapod, v):
                 curr_leg.move_alpha(alpha, dt)
                 curr_leg.move_beta(beta, dt)
                 curr_leg.move_gamma(gamma, dt)
+
+
+def move_leg_4(hexapod):
+
+    points = generate_traj(hexapod, v)
+
+    x_pos = points[0]
+    y_pos = points[1]
+    z_pos = points[2]
+    
+    q_t = np.empty(6, dtype=object)
+    qd_t = np.empty(6, dtype=object)
+
+    for t in range(6):
+        q_t[t] = calc_ik(hexapod, [x_pos[3, t], y_pos[3, t], z_pos[3, t]]) 
+
+    for t in range(6):
+        angles = q_t[t]
+        J = calc_jacobian(hexapod, angles[0], angles[1], angles[2])
+        print(J)
+        qd_t[t] = np.matmul(np.linalg.inv(J), np.transpose(angles))
+            
+    for t in range(5):
+        t_0 = process_time_ns()
+        while dt < 10000:
+            leg4 = hexapod.legs[3]
+            dt = (process_time_ns - t_0) / 1000000
+            coeffs = trajectory_planning(q_t[t], q_t[t+1], qd_t[t], qd_t[t], 0, dt)
+            alpha = cubic_traj(coeffs[0], dt)
+            beta = cubic_traj(coeffs[1], dt)
+            gamma = cubic_traj(coeffs[2], dt)
+            leg4.move_alpha(alpha, dt)
+            leg4.move_beta(beta, dt)
+            leg4.move_gamma(gamma, dt)        
+    

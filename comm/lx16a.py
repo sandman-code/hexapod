@@ -71,7 +71,6 @@ class LX16A:
 	
 	@staticmethod
 	def sendPacket(packet):
-		print(packet)
 		packet.append(LX16A.checksum(packet))
 		packet = bytes(packet)
 		
@@ -83,7 +82,6 @@ class LX16A:
 			raise ServoTimeout(ID, f"Servo {ID} is not responding")
 		if LX16A.checksum(packet[:-1]) != packet[-1]:
 			LX16A.controller.flushInput()
-			print(packet)
 			raise ServoChecksumError(ID, f"Bad checksum from servo {ID}")
 	
 	@staticmethod

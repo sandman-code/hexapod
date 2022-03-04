@@ -1,3 +1,4 @@
+from cmath import atan
 import numpy as np
 from math import sqrt, radians, sin, cos, degrees, acos, isnan
 
@@ -184,16 +185,21 @@ def calc_ik_parallel(orr, hexapod):
 def calc_ik(hexapod, position):
 
     # EE position is all WRT to hip cordinate system
-    x = radians(position[0])
-    y = radians(position[1])
-    z = radians(position[2])
+    x = position[0]
+    y = position[1]
+    z = position[2]
 
 
     alpha = np.arctan(y/x)
-    beta = np.arccos((-hexapod.tibia**2 + hexapod.femur**2 + x**2 + y**2 + z**2)/(2 * hexapod.femur * sqrt(x**2 + y**2 + z**2))) + np.arctan(z/sqrt(x**2 + y**2))
-    gamma = -np.arccos((x**2 + y**2 + z**2 - hexapod.femur**2 - hexapod.tibia**2)/ (2 * hexapod.femur * hexapod.tibia))
+    l = sqrt((y)**2 + (x)**2)
+    d = sqrt((z)**2 + (l-hexapod.coxia)**2)
+    print("Lengths")
+    print(l)
+    print(d)
+    beta = np.arccos((hexapod.femur**2 + (d)**2 - hexapod.tibia**2)/(2*hexapod.femur*d))-np.arctan(abs(z)/(l-hexapod.coxia))
+    gamma = np.pi-(np.arccos((hexapod.femur**2 + hexapod.tibia**2 - (d)**2)/(2*hexapod.femur*hexapod.tibia))) 
 
-    return degrees(alpha), degrees(beta), degrees(gamma)
+    return np.around(degrees(alpha),3), np.around(degrees(beta),3), np.around(degrees(gamma),3)
 
 # O: position vector of COR wrt ground
 # R: desired orientation matrix of the platform body
