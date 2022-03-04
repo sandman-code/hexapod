@@ -210,7 +210,7 @@ def walk(hexapod, v):
                 curr_leg.move_gamma(gamma, dt)
 
 
-def move_leg_4(hexapod):
+def move_leg_4(hexapod, v):
 
     points = generate_traj(hexapod, v)
 
