@@ -222,7 +222,8 @@ def move_leg_4(hexapod, v):
     qd_t = np.empty(6, dtype=object)
 
     for t in range(6):
-        q_t[t] = calc_ik(hexapod, [x_pos[3, t], y_pos[3, t], z_pos[3, t]]) 
+        q_t[t] = calc_ik(hexapod, [x_pos[3, t], y_pos[3, t], z_pos[3, t]])
+        print (q_t[t])
 
     for t in range(6):
         angles = q_t[t]
