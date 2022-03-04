@@ -85,8 +85,8 @@ if __name__ == '__main__':
     #generate_traj(hexy, 0.05)
     #move_leg_4(hexy, 0.05)
 
-    print(calc_ik(hexy, [0.105, 0, -0.140]))
-    #print(calc_fk(hexy.coxia, hexy.femur, hexy.tibia, (0,0,0)))
+    #print(calc_ik(hexy, [0.105, 0, -0.140]))
+    print(calc_fk(hexy.coxia, hexy.femur, hexy.tibia, (0,0,0)))
 
 
 

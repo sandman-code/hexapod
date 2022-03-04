@@ -102,49 +102,49 @@ def calc_fk(coxa, tibia, femur, angles):
 
     # a distances
     a1 = coxa
-    a2 = tibia
-    a3 = femur
-
+    a2 = femur
+    a3 = 0
+    d3 = tibia
     # alpha angles
-    alpha1 = np.pi / 2
+    alpha1 = -np.pi / 2
     alpha2 = 0
     alpha3 = -np.pi / 2
 
     # End Effector Frame
     x4 = -np.pi / 2
     a4 = 0
-    alpha4 = np.pi / 2
+    alpha4 = 0
 
     # Fill Transormation Matrices
-    T01 = np.matrix([
+    T12 = np.matrix([
         [np.cos(x1), -np.sin(x1)*np.cos(alpha1), np.sin(x1)*np.sin(alpha1), a1*np.cos(x1)],
         [np.sin(x1), np.cos(x1)*np.cos(alpha1), -np.cos(x1)*np.sin(alpha1), a1*np.sin(x1)],
         [0,np.sin(alpha1),np.cos(alpha1),0],
         [0,0,0,1],
     ])
 
-    T12 = np.matrix([
+    T23 = np.matrix([
         [np.cos(x2), -np.sin(x2)*np.cos(alpha2), np.sin(x2)*np.sin(alpha2), a2*np.cos(x2)],
         [np.sin(x2), np.cos(x2)*np.cos(alpha2), -np.cos(x2)*np.sin(alpha2), a2*np.sin(x2)],
         [0,np.sin(alpha2),np.cos(alpha2),0],
         [0,0,0,1],
     ])
 
-    T23 = np.matrix([
-        [np.cos(x3), -np.sin(x3)*np.cos(alpha3), np.sin(x3)*np.sin(alpha3), a3*np.cos(x3)],
-        [np.sin(x3), np.cos(x3)*np.cos(alpha3), -np.cos(x3)*np.sin(alpha3), a3*np.sin(x3)],
-        [0,np.sin(alpha3),np.cos(alpha3),0],
+    T34 = np.matrix([
+        [np.cos(x3), (-np.sin(x3) * np.cos(alpha3)), np.sin(x3)*np.sin(alpha3), a3*np.cos(x3)],
+        [np.sin(x3), (np.cos(x3) * np.cos(alpha3)), (-np.cos(x3)*np.sin(alpha3)), (a3*np.sin(x3))],
+        [0,np.sin(alpha3),np.cos(alpha3),d3],
         [0,0,0,1],
     ])
 
-    T34 = np.matrix([
-        [np.cos(x4), (-np.sin(x4) * np.cos(alpha4)), np.sin(x4)*np.sin(alpha4), a4*np.cos(x4)],
-        [np.sin(x4), (np.cos(x4) * np.cos(alpha4)), (-np.cos(x4)*np.sin(alpha4)), (a4*np.sin(x4))],
+    T45 = np.matrix([
+        [np.cos(x4), -np.sin(x4)*np.cos(alpha4), np.sin(x4)*np.sin(alpha4), a4*np.cos(x4)],
+        [np.sin(x4), np.cos(x4)*np.cos(alpha4), -np.cos(x4)*np.sin(alpha4), a4*np.sin(x4)],
         [0,np.sin(alpha4),np.cos(alpha4),0],
         [0,0,0,1],
     ])
 
-    return np.around((T01 @ T12 @ T23 @ T34), 3)
+    return np.around((T12 @ T23 @ T34), 3)
 
 # orr[alpha, beta, gamma]
 def calc_ik_parallel(orr, hexapod):
