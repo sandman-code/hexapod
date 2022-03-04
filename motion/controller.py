@@ -1,6 +1,6 @@
 from time import sleep, process_time_ns
 from motion.maths import *
-from math import cos, gamma, sin
+from math import cos, sin 
 import numpy as np
 import matplotlib.pyplot as plt
 
