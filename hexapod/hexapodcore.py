@@ -48,7 +48,7 @@ class Hexapod:
     hip_vector = 185 / 1000
 
     # Stride length of each leg
-    stride_length = 100 / 1000
+    stride_length = 50 / 1000
 
     # Max height of the leg for the transfer phase
     leg_height_max = 50 / 1000

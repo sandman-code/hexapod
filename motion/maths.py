@@ -190,13 +190,13 @@ def calc_ik(hexapod, position):
     z = position[2]
 
 
-    alpha = atan(y/x)
+    alpha = np.arctan(y/x)
     l = sqrt((y)**2 + (x)**2)
     d = sqrt((z)**2 + (l-hexapod.coxia)**2)
     print("Lengths")
     print(l)
     print(d)
-    beta = acos((hexapod.femur**2 + (d)**2 - hexapod.tibia**2)/(2*hexapod.femur*d))-atan(abs(z)/(l-hexapod.coxia))
+    beta = np.arccos((hexapod.femur**2 + (d)**2 - hexapod.tibia**2)/(2*hexapod.femur*d))-np.arctan(abs(z)/(l-hexapod.coxia))
     gamma = pi-(acos((hexapod.femur**2 + hexapod.tibia**2 - (d)**2)/(2*hexapod.femur*hexapod.tibia))) 
     print(alpha, beta, gamma)
     return np.around(degrees(alpha.real),3), np.around(degrees(beta.real),3), np.around(degrees(gamma.real),3)

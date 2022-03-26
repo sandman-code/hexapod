@@ -40,7 +40,7 @@ def generate_traj(hexapod, v):
 
     transfer_time = np.array([t0, t1, t2, t3, t4, t5])
 
-    x_max_vel = (2 * (t5 - t0) * u_fg) / ((t4 - t1) * (t3 - t2))
+    x_max_vel = (2 * (t5 - t0) * u_fg) / ((t4 - t1) + (t3 - t2))
 
     z_max_vel = x_max_vel
 
@@ -131,12 +131,6 @@ def generate_traj(hexapod, v):
             y_dotfh[l, n] = np.dot(np.array([sin(alphaH[n]), cos(alphaH[n]),0]), np.array([[x_dotfb[l,n]], [y_dotfb], [z_dotfb[l,n]]]))
             z_dotfh[l, n] = z_dotfb[l,n]
     
-    print("X Pos")
-    print(x_foot_body)
-    print(x_body_ground)
-    print("Z Pos")
-    print(z_foot_body)
-
 
     fig, (ax1, ax2, ax3, ax4) = plt.subplots(4)
     fig.suptitle("Motions of Robot")
@@ -161,8 +155,13 @@ def generate_traj(hexapod, v):
     fig.tight_layout()
     plt.show()
 
+    print("X Foot Hip")
     print(x_foot_hip)
+
+    print("Y Foot Hip")
     print(y_foot_hip)
+
+    print("Z Foot Hip")
     print(z_foot_hip)
     return (x_foot_hip, y_foot_hip, z_foot_hip, x_dotfh, y_dotfh, z_dotfh)
 
@@ -220,6 +219,7 @@ def move_leg_4(hexapod, v):
     
     q_t = np.empty(6, dtype=object)
     qd_t = np.empty(6, dtype=object)
+    dt = 0
 
     for t in range(6):
         q_t[t] = calc_ik(hexapod, [x_pos[3, t], y_pos[3, t], z_pos[3, t]])
