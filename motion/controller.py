@@ -1,6 +1,6 @@
 from time import sleep, process_time_ns
 from motion.maths import *
-from math import cos, sin 
+from math import cos, sin, degrees 
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -204,6 +204,7 @@ def walk(hexapod, v):
                 alpha = cubic_traj(coeffs[0], dt)
                 beta = cubic_traj(coeffs[1], dt)
                 gamma = cubic_traj(coeffs[2], dt)
+                
                 curr_leg.move_alpha(alpha, dt)
                 curr_leg.move_beta(beta, dt)
                 curr_leg.move_gamma(gamma, dt)
@@ -235,12 +236,13 @@ def move_leg_4(hexapod, v):
         t_0 = process_time_ns()
         while dt < 10000:
             leg4 = hexapod.legs[3]
-            dt = (process_time_ns - t_0) / 1000000
+            dt = (process_time_ns() - t_0) / 1000000
             coeffs = trajectory_planning(q_t[t], q_t[t+1], qd_t[t], qd_t[t], 0, dt)
-            alpha = cubic_traj(coeffs[0], dt)
-            beta = cubic_traj(coeffs[1], dt)
-            gamma = cubic_traj(coeffs[2], dt)
-            leg4.move_alpha(alpha, dt)
-            leg4.move_beta(beta, dt)
-            leg4.move_gamma(gamma, dt)        
+            print(coeffs)
+            alpha = degrees(cubic_traj(coeffs[0], dt))
+            beta = degrees(cubic_traj(coeffs[1], dt))
+            gamma = degrees(cubic_traj(coeffs[2], dt))
+            leg4.move_alpha(int(alpha), dt)
+            leg4.move_beta(int(beta), dt)
+            leg4.move_gamma(int(gamma), dt)        
     

@@ -42,6 +42,7 @@ class Leg:
     def move_alpha(self, alpha, time):
 
         if alpha > 90 or alpha < -90:
+            print(alpha)
             raise ServoArgumentError(self.id, "Input out of range")
 
         self.alpha = alpha
@@ -52,6 +53,7 @@ class Leg:
     def move_beta(self, beta, time):
 
         if beta > 90 or beta < -70:
+            print(beta)
             raise ServoArgumentError(self.id, "Input out of range")
             
         self.beta = beta
@@ -60,7 +62,8 @@ class Leg:
     def move_gamma(self, gamma, time):
 
         if gamma > 90 or gamma < -90:
-         raise ServoArgumentError(self.id, "Input out of range")
+            print(gamma)
+            raise ServoArgumentError(self.id, "Input out of range")
 
         self.gamma = gamma
         self.gamma_motor.moveFromCenter( int(gamma), time)
