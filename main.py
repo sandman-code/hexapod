@@ -4,7 +4,8 @@ from motion.controller import *
 from hexapod.hexapodcore import Hexapod, Leg
 from motion.maths import *
 from comm.marlinSerialProtocol import MarlinSerialProtocol
-import test.gcode as gcode
+from comm.command import *
+import time
 
 if __name__ == '__main__':
     
@@ -20,12 +21,13 @@ if __name__ == '__main__':
     
     offset = 5
     
-    ms = MarlinSerialProtocol("/dev/ttyACM0")
-    for line in enumerate(gcode):
-        ms.sendReliable(line)
-        while(not ms.clearToSend()): 
-            ms.readline()
-
+    ard = serial.Serial('/dev/ttyACM0', 115200)
+    time.sleep(2)
+    print(ard.is_open)
+    command(ard, "G28\r\n")
+    command(ard, "G1 X100\r\n")
+    time.sleep(2)
+    ard.close()
     LX16A.initialize("/dev/ttyUSB0")
     #LX16A.initialize("/dev/cu.usbserial-14140")
     #LX16A.initialize("COM3")
