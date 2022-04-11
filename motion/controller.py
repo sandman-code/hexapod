@@ -9,9 +9,9 @@ def home(hexapod):
     legs = hexapod.legs
 
     for l in legs:
-        l.move_alpha(0, 100)
-        l.move_beta(0, 100)
-        l.move_gamma(0, 100)
+        l.move_alpha(5, 100)
+        l.move_beta(-50, 100)
+        l.move_gamma(20, 100)
 
     print("Robot Calibrated")
 
