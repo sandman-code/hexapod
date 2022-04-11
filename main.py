@@ -3,6 +3,8 @@ from comm.lx16a import *
 from motion.controller import *
 from hexapod.hexapodcore import Hexapod, Leg
 from motion.maths import *
+from comm.marlinSerialProtocol import MarlinSerialProtocol
+import test.gcode as gcode
 
 if __name__ == '__main__':
     
@@ -15,8 +17,15 @@ if __name__ == '__main__':
 
     # gamma (-90, 90)
     gamma = 0 
-
+    
     offset = 5
+    
+    ms = MarlinSerialProtocol("/dev/ttyACM0")
+    for line in enumerate(gcode):
+        ms.sendReliable(line)
+        while(not ms.clearToSend()): 
+            ms.readline()
+
     LX16A.initialize("/dev/ttyUSB0")
     #LX16A.initialize("/dev/cu.usbserial-14140")
     #LX16A.initialize("COM3")
