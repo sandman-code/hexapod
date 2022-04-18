@@ -365,6 +365,8 @@ def gen_traj_example():
     print(xf_H)
     print(yf_H)
     print(zf_H)
+    plot_tip_points(xf_H, yf_H, zf_H)
+    '''
     plt.subplot(3,2,1)
     plt.plot(Ttt, xdotf_g)
     plt.subplot(3,2,2)
@@ -381,6 +383,7 @@ def gen_traj_example():
     plt.subplot(3,2,6)
     plt.plot(xf_b[3,:], zf_b[3,:])
     plt.show()
+    '''
     #----- Inverse Kinematics ---------
 
     Alpha0 = 0
@@ -406,7 +409,21 @@ def gen_traj_example():
     A = Alpha*(180/np.pi)
     B = Beta*(180/np.pi)
     G = Gamma*(180/np.pi)
-    print(Alpha)
-    print(A)
-    print(B)
-    print(G)
+
+
+
+def plot_tip_points(x_mat, y_mat, z_mat):
+    l2 = 0.05
+    l3 = 0.1
+
+    x = x_mat[0]
+    y = y_mat[0]
+    z = z_mat[0]
+    
+    ax = plt.axes(projection='3d')
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.scatter3D(np.concatenate((x,[0])), np.concatenate((y,[0])), np.concatenate((z,[0])))
+    plt.show()
+    
+

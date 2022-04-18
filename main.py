@@ -21,19 +21,37 @@ if __name__ == '__main__':
     
     offset = 5
     
-    ard = serial.Serial('/dev/ttyACM0', 115200)
+    
+    ard = serial.Serial('COM3', 115200)
     time.sleep(2)
     print(ard.is_open)
-    command(ard, "G28\r\n")
-    command(ard, "G1 X100\r\n")
+    ard.write("G28\r\n".encode())
+    time.sleep(1)
+    ard.write("M104 S200\r\n".encode())
+    time.sleep(1)
+    ard.write("G92 E0\r\n".encode())
+    time.sleep(1)
+    ard.write("G1 F3000\r\n".encode())
+    time.sleep(1)
+    ard.write("G92\r\n".encode())
+    time.sleep(1)
+    ard.write("G0 X20 Y20 Z20\r\n".encode())
+    time.sleep(1)
+    ard.write("G1 E100 F400\r\n".encode())
     time.sleep(2)
     ard.close()
-    LX16A.initialize("/dev/ttyUSB0")
+
+    '''
+    G1 F1500 ; set the feedrate to 1500 mm/min
+    G92 E0
+    G1 X50 Y25.3 E22.4 ; move while extruding
+    '''
+    #LX16A.initialize("/dev/ttyUSB0")
     #LX16A.initialize("/dev/cu.usbserial-14140")
     #LX16A.initialize("COM3")
     
     
-    
+    '''
     
     
     try:
@@ -76,7 +94,7 @@ if __name__ == '__main__':
         print(f"Servo {e.ID} is not responding. Exiting...")
         exit()
 
-    
+    '''
 
     '''
     print("\n")
@@ -90,13 +108,13 @@ if __name__ == '__main__':
     '''
 
     #hexy = Hexapod()
-    hexy = Hexapod(LEGS)
+    #hexy = Hexapod(LEGS)
 
     #walk(hexy, 0.05)
     #generate_traj(hexy, 0.05)
     #move_leg_4(hexy, 0.05)
     
-    home(hexy)
+    #home(hexy)
     #print(calc_ik(hexy, [0.105, 0, -0.140]))
     #print(calc_fk(hexy.coxia, hexy.femur, hexy.tibia, (0,0,0)))
     #gen_traj_example()
