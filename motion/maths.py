@@ -17,7 +17,10 @@ x_f/g(t + del_t) = x_f/g(t) + xdot_f/g * del_t
 z_f/g(t + del_t) = z_f/g(t) + zdot_f/g * del_t
 '''
 
+'''
+Legs are represented as a series of 3 vectors
 
+'''
 class Vector:
 
     def __init__(self, x, y, z):

@@ -3,7 +3,7 @@ from comm.lx16a import ServoArgumentError
 
 class Leg:
 
-    def __init__(self, angles, motors, id):
+    def __init__(self, links, angles, motors, id):
         
         self.id = id
 
@@ -15,11 +15,10 @@ class Leg:
         self.beta_motor = motors[1]
         self.gamma_motor = motors[2]
 
-        self.knee_vector = Vector(0,0,0)
-        self.hip_vector = Vector(0,0,0)
+        self.l1 = links[0]
+        self.l2 = links[1]
+        self.l3 = links[2]
 
-        self.ee_pos = Vector(0,0,0)
-        
     
     def set_alpha(self, alpha):
         self.alpha = alpha
